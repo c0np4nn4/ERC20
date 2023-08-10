@@ -8,9 +8,5 @@ module.exports = {
     hardhat: {
       chainId: 31337,
     },
-    localhost: {
-      // url: "http://127.0.0.1",
-      // port: "8545",
-    }
   }
 };
