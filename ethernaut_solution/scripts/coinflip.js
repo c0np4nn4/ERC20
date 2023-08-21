@@ -10,8 +10,8 @@ async function main() {
 
   console.log("[2] create a CoinFlip instance");
   const receipt = await factory.createInstance(owner.address);
-  const coinFlip_address = (await receipt.wait()).events[0].args[0];
-  const coinFlip = await ethers.getContractAt("CoinFlip", coinFlip_address, owner);
+  const instance_address = (await receipt.wait()).events[0].args[0];
+  const coinFlip = await ethers.getContractAt("CoinFlip", instance_address, owner);
 
   console.log("[3] deploy CoinFlipAttack");
   const Attack = await ethers.getContractFactory("CoinFlipAttack");
