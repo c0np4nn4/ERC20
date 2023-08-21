@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "../prob/CoinFlip.sol";
+import "../prob/CoinFlip/CoinFlip.sol";
 
 contract CoinFlipAttack {
     uint256 FACTOR =
