@@ -36,8 +36,8 @@ async function main() {
     await attack.attack(force.address);
 
     console.log("\n[6] validate solved");
-    const res = await factory.validateInstance(force.address, player.address);
 
+    const res = await factory.validateInstance(force.address, player.address);
     if (res == true) {
         console.log("[+] Done!");
     } else {

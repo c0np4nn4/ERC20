@@ -3,9 +3,10 @@
 pragma solidity ^0.8.0;
 
 import "../base/Level.sol";
+import "../utils/Log.sol";
 import "./Force.sol";
 
-contract ForceFactory is Level {
+contract ForceFactory is Level, Log {
     function createInstance(address _player)
         public
         payable

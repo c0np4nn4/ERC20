@@ -3,11 +3,12 @@
 pragma solidity ^0.8.0;
 
 import "../base/Level.sol";
+import "../utils/Log.sol";
 import "./Delegation.sol";
 
 import "hardhat/console.sol";
 
-contract DelegationFactory is Level {
+contract DelegationFactory is Level, Log {
     address delegateAddress;
 
     constructor() {

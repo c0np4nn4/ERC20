@@ -4,10 +4,11 @@ pragma solidity ^0.8.0;
 
 import "../base/Level.sol";
 import "./Vault.sol";
+import "../utils/Log.sol";
 
 import "hardhat/console.sol";
 
-contract VaultFactory is Level {
+contract VaultFactory is Level, Log {
     function createInstance(address _player)
         public
         payable
