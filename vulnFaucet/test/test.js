@@ -15,51 +15,41 @@ describe("Faucet Test", function() {
         // deposit ETH
         const tx = {
             to: faucet.address,
-            value: ethers.utils.parseEther("9999.9"),
+            value: ethers.utils.parseEther("1337"),
             gasLimit: 50000,
         };
 
         await owner.sendTransaction(tx);
-        await addr1.sendTransaction(tx);
-        await addr2.sendTransaction(tx);
     });
 
-    describe("Deployment", function() {
-        it("Deposit 1337 ETH by deployer", async function() {
+    describe("Deposit", function() {
+        it("Deposit 1337 ETH", async function() {
+            let expect_value = ethers.utils.parseEther((1337).toString());
+            let faucet_balance = await faucet.balance();
 
-            let a = ethers.utils.parseEther("29999.7");
-            let b = await faucet.balance();
-
-            expect(a.toString()).to.equal(b.toString());
+            expect(faucet_balance.toString()).to.equal(expect_value.toString());
         });
     });
 
     describe("Withdraw", function() {
         it("withdraw 1 ETH", async function() {
+            let acc_bal;
+            const one_eth = ethers.utils.parseEther("1").toBigInt();
+
+            const dummy_tx = {
+                to: faucet.address,
+                value: (ethers.utils.parseEther("9999").toBigInt()),
+                gasLimit: 50000,
+            }
+            await addr1.sendTransaction(dummy_tx);
+
+            acc_bal = (await addr1.getBalance()).toBigInt();
+            assert(acc_bal < one_eth, "account has less than 1 ETH")
+
             await faucet.connect(addr1).withdraw(ethers.utils.parseEther("1"));
 
-            let one_eth = ethers.utils.parseEther("1").toBigInt();
-            let acc_bal = (await addr1.getBalance()).toBigInt();
-
+            acc_bal = (await addr1.getBalance()).toBigInt();
             assert(one_eth < acc_bal, "one_eth should be less than acc_bal");
         });
-
-        it("withdraw 1ETH (2)", async function() {
-            const wallet = Wallet.createRandom();
-            console.log("Randomly generated address:", wallet.address);
-
-            // Hardhat 로컬 네트워크에 연결하기 위한 JsonRpcProvider 생성
-            const provider = new providers.JsonRpcProvider('http://localhost:8545');
-
-            // Wallet에 provider 연결
-            const connectedWallet = wallet.connect(provider);
-
-            // 연결된 Wallet 객체를 사용하여 잔액 조회
-            const balance = await connectedWallet.getBalance();
-            console.log("Balance of the address on Hardhat network:", balance.toString());
-        });
     });
-
-
-
 });
