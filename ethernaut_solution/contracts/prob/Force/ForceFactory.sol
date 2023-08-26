@@ -12,8 +12,15 @@ contract ForceFactory is Level {
         override
         returns (address)
     {
+        // _player;
+        // return address(new Force());
+
         _player;
-        return address(new Force());
+        Force force = new Force();
+
+        emit GetInstanceAddress(address(force));
+
+        return address(force);
     }
 
     function validateInstance(address payable _instance, address _player)
