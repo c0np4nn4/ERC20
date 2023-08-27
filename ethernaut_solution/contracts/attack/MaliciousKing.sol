@@ -9,8 +9,6 @@ import "hardhat/console.sol";
 contract MaliciousKing {
     constructor() payable {}
 
-    // receive() external payable {}
-
     // reject all the ether transfer
     receive() external payable {
         revert("FAIL");
