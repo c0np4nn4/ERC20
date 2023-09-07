@@ -6,19 +6,6 @@ import "hardhat/console.sol";
 contract GatekeeperOne {
     address public entrant;
 
-    // Gas Estimation
-    //     {
-    // 	"Creation": {
-    // 		"codeDepositCost": "527600",
-    // 		"executionCost": "562",
-    // 		"totalCost": "528162"
-    // 	},
-    // 	"External": {
-    // 		"enter(bytes8)": "infinite",
-    // 		"entrant()": "2511"
-    // 	}
-    // }
-
     modifier gateOne() {
         require(msg.sender != tx.origin);
         _;
@@ -30,7 +17,6 @@ contract GatekeeperOne {
     }
 
     modifier gateThree(bytes8 _gateKey) {
-        console.log("++++++ gate three 3333333333333333333333333333");
         require(
             uint32(uint64(_gateKey)) == uint16(uint64(_gateKey)),
             "GatekeeperOne: invalid gateThree part one"
