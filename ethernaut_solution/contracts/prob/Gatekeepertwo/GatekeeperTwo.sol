@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "hardhat/console.sol";
+
 contract GatekeeperTwo {
     address public entrant;
 
@@ -19,6 +21,12 @@ contract GatekeeperTwo {
     }
 
     modifier gateThree(bytes8 _gateKey) {
+        console.log("++++ Gate Three");
+        console.log(msg.sender);
+        console.logBytes8(bytes8(keccak256(abi.encodePacked(msg.sender))));
+        console.logBytes8(_gateKey);
+        console.log(type(uint64).max);
+
         require(
             uint64(bytes8(keccak256(abi.encodePacked(msg.sender)))) ^
                 uint64(_gateKey) ==

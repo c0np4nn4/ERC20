@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 
 import "../base/Level.sol";
 import "../utils/Log.sol";
+
 import "./GatekeeperTwo.sol";
 
 contract GatekeeperTwoFactory is Level, Log {
