@@ -4,3 +4,9 @@
 [submodule "ERC20/lib/forge-std"]
 	path = ERC20/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "uni_assignment/auction/lib/forge-std"]
+	path = uni_assignment/auction/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "uni_assignment/token/lib/forge-std"]
+	path = uni_assignment/token/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

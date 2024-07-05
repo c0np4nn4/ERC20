@@ -1,0 +1,68 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma experimental ABIEncoderV2;
+pragma solidity ^0.6.12;
+
+import "forge-std/Test.sol";
+import "forge-std/console.sol";
+import "src/AutoBid.sol";
+
+contract AutoBidTest is Test {
+    Auction auction;
+
+    address payable owner = address(0x11111111);
+    address payable brian = address(0x22222222);
+    address payable chris = address(0x33333333);
+
+    function setUp() public {
+        // new Token with cap: 100
+        vm.deal(owner, 100 ether);
+        vm.deal(brian, 100 ether);
+        vm.deal(chris, 100 ether);
+
+        // caller: alice
+        vm.prank(owner);
+
+        auction = new Auction(100, owner);
+    }
+
+    function testBidding() public {
+      vm.prank(brian);
+      auction.bid{value: 1 ether}();
+
+      vm.prank(chris);
+      auction.bid{value: 2.5 ether}();
+    }
+
+    function testAuctionEnd() public {
+      vm.prank(brian);
+      auction.bid{value: 1 ether}();
+
+      vm.prank(chris);
+      auction.bid{value: 2.5 ether}();
+
+      vm.warp(101);
+      vm.prank(owner);
+      auction.auctionEnd();
+    }
+
+    function testWithdraw() public {
+      vm.prank(brian);
+      auction.bid{value: 1 ether}();
+
+      vm.prank(chris);
+      auction.bid{value: 2.5 ether}();
+
+      vm.warp(101);
+      vm.prank(owner);
+      auction.auctionEnd();
+
+
+      console.log("Balance of brian before withdraw: %i", address(brian).balance);
+
+      vm.prank(brian);
+      auction.withdraw();
+
+      console.log("Balance of brian after  withdraw: %i", address(brian).balance);
+    }
+
+}
