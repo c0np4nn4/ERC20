@@ -1,12 +1,18 @@
 [submodule "foundry_ethernaut/lib/forge-std"]
 	path = foundry_ethernaut/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+
 [submodule "ERC20/lib/forge-std"]
 	path = ERC20/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+
 [submodule "uni_assignment/auction/lib/forge-std"]
 	path = uni_assignment/auction/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
 [submodule "uni_assignment/token/lib/forge-std"]
 	path = uni_assignment/token/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+
+[submodule "wargames/foundry/ethernaut/lib/forge-std"]
+	path = wargames/foundry/ethernaut/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
