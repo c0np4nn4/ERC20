@@ -22,3 +22,6 @@
 [submodule "wargames/foundry/sekaiCTF2024/lib/forge-std"]
 	path = wargames/foundry/sekaiCTF2024/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "wargames/foundry/sekaiCTF2024/lib/openzeppelin-contracts"]
+	path = wargames/foundry/sekaiCTF2024/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
