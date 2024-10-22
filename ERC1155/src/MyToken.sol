@@ -15,7 +15,8 @@ contract WarlusERC1155NFT is ERC1155, Ownable {
     // 이벤트: 새로운 URI가 설정될 때 발생
     event URISet(uint256 indexed id, string uri);
 
-    constructor() ERC1155("") {
+    constructor() ERC1155("") Ownable(tx.origin) {
+      transferOwnership(tx.origin);
         // 초기 URI는 비워둡니다. 개별 URI를 설정할 예정입니다.
     }
 
@@ -36,7 +37,12 @@ contract WarlusERC1155NFT is ERC1155, Ownable {
      * @param amount 토큰 수량
      * @param tokenURI 토큰의 URI (warlus를 통해 호스팅된 URI)
      */
-    function mint(address account, uint256 id, uint256 amount, string memory tokenURI) public onlyOwner {
+    function mint(
+      address account, 
+      uint256 id, 
+      uint256 amount, 
+      string memory tokenURI
+    ) public onlyOwner {
         _mint(account, id, amount, "");
         _setURI(id, tokenURI);
     }
